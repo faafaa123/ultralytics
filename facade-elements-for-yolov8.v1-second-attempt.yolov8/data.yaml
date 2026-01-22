@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 1
+names: ['window']
+
+roboflow:
+  workspace: odrivee
+  project: facade-elements-for-yolov8-erhqc
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/odrivee/facade-elements-for-yolov8-erhqc/dataset/1
