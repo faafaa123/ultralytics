@@ -51,16 +51,14 @@ async function main() {
 
     const output = results[session.outputNames[0]];
 
-const detections = decodeYOLO(
-    output,
-    0.25
-);
+    const detections = decodeYOLO(
+        output,
+        0.25
+    );
 
-console.log(detections);
+    console.log(detections);
 
 }
-
-import * as ort from "onnxruntime-web";
 
 interface Detection {
     x: number;
