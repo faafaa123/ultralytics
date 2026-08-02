@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { graphics } from './classes/graphics';
 import * as ort from "onnxruntime-web";
+ort.env.wasm.wasmPaths = "/node_modules/onnxruntime-web/dist/";
 
 let Graphics: graphics;
 
@@ -18,23 +19,105 @@ async function init() {
 
     Graphics.main()
 
+    await main()
+
+}
+
+async function main() {
+
     const session = await ort.InferenceSession.create(
         "tree_detector.onnx"
     );
 
-    // const image = await loadImage("tree.jpg");
+    const image = await loadImage("tree.jpg");
 
-    // const tensor = imageToTensor(image, 640);
+    const tensor = imageToTensor(image, 640);
 
-    // const results = await session.run({
-    //     images: tensor
-    // });
+    const results = await session.run({
+        images: tensor
+    });
 
     // console.log(results);
 
-    // console.log(session.inputNames);
     // console.log(session.outputNames);
 
+    // for (const name of session.outputNames) {
+    //     const output = results[name];
+
+    //     console.log("Name:", name);
+    //     console.log("Shape:", output.dims);
+    //     console.log("Data:", output.data);
+    // }
+
+    const output = results[session.outputNames[0]];
+
+const detections = decodeYOLO(
+    output,
+    0.25
+);
+
+console.log(detections);
+
+}
+
+interface Detection {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+
+    classId: number;
+    confidence: number;
+}
+
+function decodeYOLO(
+    output: ort.Tensor,
+    confidenceThreshold = 0.25
+): Detection[] {
+
+    const data = output.data as Float32Array;
+
+    const numPredictions = output.dims[2];
+    const numClasses = output.dims[1] - 4;
+
+    const detections: Detection[] = [];
+
+    for (let i = 0; i < numPredictions; i++) {
+
+        const x = data[0 * numPredictions + i];
+        const y = data[1 * numPredictions + i];
+        const width = data[2 * numPredictions + i];
+        const height = data[3 * numPredictions + i];
+
+        // Beste Klasse suchen
+        let bestClassId = -1;
+        let bestConfidence = 0;
+
+        for (let classId = 0; classId < numClasses; classId++) {
+
+            const confidence =
+                data[(4 + classId) * numPredictions + i];
+
+            if (confidence > bestConfidence) {
+                bestConfidence = confidence;
+                bestClassId = classId;
+            }
+        }
+
+        if (bestConfidence < confidenceThreshold)
+            continue;
+
+        detections.push({
+            x,
+            y,
+            width,
+            height,
+            classId: bestClassId,
+            confidence: bestConfidence
+        });
+    }
+
+    return detections;
 }
 
 function loadImage(src: string): Promise<HTMLImageElement> {
