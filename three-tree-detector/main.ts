@@ -60,6 +60,8 @@ console.log(detections);
 
 }
 
+import * as ort from "onnxruntime-web";
+
 interface Detection {
     x: number;
     y: number;
@@ -67,8 +69,21 @@ interface Detection {
     height: number;
 
     classId: number;
+    className: string;
+
     confidence: number;
 }
+
+const classNames = [
+    "-",
+    "0",
+    "banana_tree",
+    "banana_tree2",
+    "blur tree",
+    "kelapa_sawit",
+    "tree",
+    "tree_crowd"
+];
 
 function decodeYOLO(
     output: ort.Tensor,
@@ -77,8 +92,8 @@ function decodeYOLO(
 
     const data = output.data as Float32Array;
 
-    const numPredictions = output.dims[2];
     const numClasses = output.dims[1] - 4;
+    const numPredictions = output.dims[2];
 
     const detections: Detection[] = [];
 
@@ -89,7 +104,6 @@ function decodeYOLO(
         const width = data[2 * numPredictions + i];
         const height = data[3 * numPredictions + i];
 
-        // Beste Klasse suchen
         let bestClassId = -1;
         let bestConfidence = 0;
 
@@ -112,7 +126,10 @@ function decodeYOLO(
             y,
             width,
             height,
+
             classId: bestClassId,
+            className: classNames[bestClassId],
+
             confidence: bestConfidence
         });
     }
