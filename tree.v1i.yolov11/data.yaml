@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 8
+names: ['-', '0', 'banana_tree', 'banana_tree2', 'blur tree', 'kelapa_sawit', 'tree', 'tree_crowd']
+
+roboflow:
+  workspace: odrivee
+  project: tree-3prlq-oiyud
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/odrivee/tree-3prlq-oiyud/dataset/1
