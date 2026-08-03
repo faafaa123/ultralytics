@@ -47,9 +47,15 @@ async function init() {
 
     console.log(groups)
 
-    let res = findRemainingPolygons(groups, groups.length)
+    let remainingIndices  = findRemainingPolygons(groups, groups.length)
 
-    console.log(res)
+    console.log(remainingIndices)
+
+    const remainingPolygons = remainingIndices.map(
+        index => polygons[index]
+    );
+
+    console.log(remainingPolygons.filter(e => e != undefined))
 
 }
 
