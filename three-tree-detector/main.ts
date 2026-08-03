@@ -28,18 +28,9 @@ async function init() {
 
     const height = 3000
 
-    const detections = await main(image, boundingBox, width, height)
+    const detections = await main(image, boundingBox, width, height, 0.02)
 
     console.log(detections);
-
-    const canvas = drawDetections(
-        image,
-        detections,
-        640,
-        640
-    );
-
-    document.body.appendChild(canvas);
 
     let polygons = detections.map(e => [e.mercatorPolygon])
 
@@ -57,7 +48,22 @@ async function init() {
 
     console.log(remainingPolygons.filter(e => e != undefined))
 
-    
+    const remainingDetections = remainingIndices.map(
+        index => detections[index]
+    );
+
+    console.log(remainingDetections)
+
+    console.log(remainingDetections.filter(e => e != undefined))
+
+        const canvas = drawDetections(
+        image,
+        remainingDetections.filter(e => e != undefined),
+        640,
+        640
+    );
+
+    document.body.appendChild(canvas);
 
 }
 
@@ -65,7 +71,8 @@ async function main(
     image: HTMLImageElement,
     boundingBox: number[],
     imageWidth: number,
-    imageHeight: number
+    imageHeight: number,
+    conf: number
 ) {
 
     const session = await ort.InferenceSession.create(
@@ -94,7 +101,7 @@ async function main(
 
     const detections = decodeYOLO(
         output,
-        0.02,
+        conf,
         boundingBox,
         imageWidth,
         imageHeight
