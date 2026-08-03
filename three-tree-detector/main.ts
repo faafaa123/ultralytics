@@ -40,6 +40,8 @@ async function init() {
 
     document.body.appendChild(canvas);
 
+
+
 }
 
 async function main(
@@ -95,6 +97,7 @@ interface Detection {
     mercatorY: number;
     mercatorWidth: number;
     mercatorHeight: number;
+    mercatorPolygon: [number, number][];
 
     classId: number;
     className: string;
@@ -245,6 +248,14 @@ function decodeYOLO(
         const mercatorWidth = (pixelWidth / sourceWidth) * (maxX - minX);
         const mercatorHeight = (pixelHeight / sourceHeight) * (maxY - minY);
 
+        const mercatorPolygon: [number, number][] = [
+            [mercatorX, mercatorY],
+            [mercatorX + mercatorWidth, mercatorY],
+            [mercatorX + mercatorWidth, mercatorY + mercatorHeight],
+            [mercatorX, mercatorY + mercatorHeight],
+            [mercatorX, mercatorY]
+        ];
+
         let bestClassId = -1;
         let bestConfidence = 0;
 
@@ -272,6 +283,7 @@ function decodeYOLO(
             mercatorY,
             mercatorWidth,
             mercatorHeight,
+            mercatorPolygon,
 
             classId: bestClassId,
             className: classNames[bestClassId],
