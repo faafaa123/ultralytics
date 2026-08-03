@@ -12,6 +12,7 @@
     "@types/three": "^0.169.0",
     "earcut": "^3.0.1",
     "onnxruntime-web": "^1.27.0",
+    "polygon-clipping": "^0.15.7",
     "three": "^0.169.0"
   },
   "devDependencies": {
