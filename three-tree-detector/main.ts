@@ -57,6 +57,8 @@ async function init() {
 
     console.log(remainingPolygons.filter(e => e != undefined))
 
+    
+
 }
 
 async function main(
@@ -92,7 +94,7 @@ async function main(
 
     const detections = decodeYOLO(
         output,
-        0.03,
+        0.02,
         boundingBox,
         imageWidth,
         imageHeight
