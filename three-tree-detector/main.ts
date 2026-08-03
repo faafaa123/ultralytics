@@ -29,6 +29,17 @@ async function init() {
 
     const detections = await main(image, boundingBox, width, height)
 
+    console.log(detections);
+
+    const canvas = drawDetections(
+        image,
+        detections,
+        640,
+        640
+    );
+
+    document.body.appendChild(canvas);
+
 }
 
 async function main(
@@ -64,13 +75,11 @@ async function main(
 
     const detections = decodeYOLO(
         output,
-        0.25,
+        0.03,
         boundingBox,
         imageWidth,
         imageHeight
     );
-
-    console.log(detections);
 
     return detections
 
@@ -103,6 +112,96 @@ const classNames = [
     "tree",
     "tree_crowd"
 ];
+
+function drawDetections(
+    image: HTMLImageElement,
+    detections: Detection[],
+    modelWidth: number,
+    modelHeight: number
+): HTMLCanvasElement {
+
+    const canvas = document.createElement("canvas");
+
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
+
+    const ctx = canvas.getContext("2d")!;
+
+    // Originalbild zeichnen
+    ctx.drawImage(
+        image,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    // Skalierungsfaktoren
+    const scaleX = canvas.width / modelWidth;
+    const scaleY = canvas.height / modelHeight;
+
+    for (const detection of detections) {
+
+        // YOLO liefert Center-X / Center-Y
+        const x = detection.x * scaleX;
+        const y = detection.y * scaleY;
+
+        const width = detection.width * scaleX;
+        const height = detection.height * scaleY;
+
+        // Linke obere Ecke berechnen
+        const left = x - width / 2;
+        const top = y - height / 2;
+
+        // Bounding Box
+        ctx.strokeStyle = "red";
+        ctx.lineWidth = 3;
+
+        ctx.strokeRect(
+            left,
+            top,
+            width,
+            height
+        );
+
+        // Text
+        const text =
+            `${detection.className} ${(detection.confidence * 100).toFixed(1)}%`;
+
+        ctx.font = "16px Arial";
+
+        const textWidth =
+            ctx.measureText(text).width;
+
+        ctx.fillStyle = "red";
+
+        ctx.fillRect(
+            left,
+            top - 22,
+            textWidth + 8,
+            22
+        );
+
+        ctx.fillStyle = "white";
+
+        ctx.fillText(
+            text,
+            left + 4,
+            top - 6
+        );
+    }
+
+    const maxHeight = 900;
+
+    if (canvas.height > maxHeight) {
+        const scale = maxHeight / canvas.height;
+
+        canvas.style.height = `${maxHeight}px`;
+        canvas.style.width = `${canvas.width * scale}px`;
+    }
+
+    return canvas;
+}
 
 function decodeYOLO(
     output: ort.Tensor,
