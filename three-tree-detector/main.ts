@@ -21,17 +21,22 @@ async function init() {
 
     const image = await loadImage("tree.jpg");
 
-    let boundingBox = [1014768.6632021207, 6693863.781530092, 1015004.1039251484, 6694083.652151881]
+    const boundingBox = [1014768.6632021207, 6693863.781530092, 1015004.1039251484, 6694083.652151881]
 
-    let width = 3000
+    const width = 3000
 
-    let height = 3000
+    const height = 3000
 
-    let detections = await main(image)
+    const detections = await main(image, boundingBox, width, height)
 
 }
 
-async function main(image: HTMLImageElement) {
+async function main(
+    image: HTMLImageElement,
+    boundingBox: number[],
+    imageWidth: number,
+    imageHeight: number
+) {
 
     const session = await ort.InferenceSession.create(
         "tree_detector.onnx"
@@ -59,7 +64,10 @@ async function main(image: HTMLImageElement) {
 
     const detections = decodeYOLO(
         output,
-        0.25
+        0.25,
+        boundingBox,
+        imageWidth,
+        imageHeight
     );
 
     console.log(detections);
@@ -73,6 +81,11 @@ interface Detection {
     y: number;
     width: number;
     height: number;
+
+    mercatorX: number;
+    mercatorY: number;
+    mercatorWidth: number;
+    mercatorHeight: number;
 
     classId: number;
     className: string;
@@ -93,7 +106,10 @@ const classNames = [
 
 function decodeYOLO(
     output: ort.Tensor,
-    confidenceThreshold = 0.25
+    confidenceThreshold = 0.25,
+    boundingBox: number[] = [0, 0, 1, 1],
+    imageWidth = 640,
+    imageHeight = 640
 ): Detection[] {
 
     const data = output.data as Float32Array;
@@ -109,6 +125,26 @@ function decodeYOLO(
         const y = data[1 * numPredictions + i];
         const width = data[2 * numPredictions + i];
         const height = data[3 * numPredictions + i];
+
+        const minX = boundingBox[0];
+        const minY = boundingBox[1];
+        const maxX = boundingBox[2];
+        const maxY = boundingBox[3];
+
+        const sourceWidth = imageWidth;
+        const sourceHeight = imageHeight;
+
+        const modelSize = 640;
+
+        const pixelX = (x / modelSize) * sourceWidth;
+        const pixelY = (y / modelSize) * sourceHeight;
+        const pixelWidth = (width / modelSize) * sourceWidth;
+        const pixelHeight = (height / modelSize) * sourceHeight;
+
+        const mercatorX = minX + (pixelX / sourceWidth) * (maxX - minX);
+        const mercatorY = maxY - (pixelY / sourceHeight) * (maxY - minY);
+        const mercatorWidth = (pixelWidth / sourceWidth) * (maxX - minX);
+        const mercatorHeight = (pixelHeight / sourceHeight) * (maxY - minY);
 
         let bestClassId = -1;
         let bestConfidence = 0;
@@ -132,6 +168,11 @@ function decodeYOLO(
             y,
             width,
             height,
+
+            mercatorX,
+            mercatorY,
+            mercatorWidth,
+            mercatorHeight,
 
             classId: bestClassId,
             className: classNames[bestClassId],
