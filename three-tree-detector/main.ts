@@ -19,17 +19,23 @@ async function init() {
 
     Graphics.main()
 
-    await main()
+    const image = await loadImage("tree.jpg");
+
+    let boundingBox = [1014768.6632021207, 6693863.781530092, 1015004.1039251484, 6694083.652151881]
+
+    let width = 3000
+
+    let height = 3000
+
+    let detections = await main(image)
 
 }
 
-async function main() {
+async function main(image: HTMLImageElement) {
 
     const session = await ort.InferenceSession.create(
         "tree_detector.onnx"
     );
-
-    const image = await loadImage("tree.jpg");
 
     const tensor = imageToTensor(image, 640);
 
@@ -57,6 +63,8 @@ async function main() {
     );
 
     console.log(detections);
+
+    return detections
 
 }
 
