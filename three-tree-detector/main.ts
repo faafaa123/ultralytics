@@ -28,7 +28,9 @@ async function init() {
 
     const height = 3000
 
-    const detections = await main(image, boundingBox, width, height, 0.02)
+    const detections = await createDetectionsViaOnnx(image, boundingBox, width, height, 0.02)
+
+    console.log('Detections:')
 
     console.log(detections);
 
@@ -36,27 +38,17 @@ async function init() {
 
     let groups = segmentize(Graphics, polygons)
 
-    console.log(groups)
-
-    let remainingIndices  = findRemainingPolygons(groups, groups.length)
-
-    console.log(remainingIndices)
-
-    const remainingPolygons = remainingIndices.map(
-        index => polygons[index]
-    );
-
-    console.log(remainingPolygons.filter(e => e != undefined))
-
+    let remainingIndices = findRemainingPolygons(groups, groups.length)
+    
     const remainingDetections = remainingIndices.map(
         index => detections[index]
-    );
+    ).filter(e => e != undefined);
+
+    console.log('remainingDetections:')
 
     console.log(remainingDetections)
 
-    console.log(remainingDetections.filter(e => e != undefined))
-
-        const canvas = drawDetections(
+    const canvas = drawDetections(
         image,
         remainingDetections.filter(e => e != undefined),
         640,
@@ -67,7 +59,7 @@ async function init() {
 
 }
 
-async function main(
+async function createDetectionsViaOnnx(
     image: HTMLImageElement,
     boundingBox: number[],
     imageWidth: number,
