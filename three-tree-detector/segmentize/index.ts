@@ -9,6 +9,8 @@ export function segmentize(Graphics: graphics, intersectingPolygons: any[]) {
 
     let intersections: intersection[] = findIntersections(intersectingPolygons)
 
+    return intersections
+
     let groups = group(intersections, intersectingPolygons.length)
 
     // console.log(groups)

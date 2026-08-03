@@ -47,7 +47,9 @@ async function init() {
 
     console.log(groups)
 
-    
+    let res = findRemainingPolygons(groups, groups.length)
+
+    console.log(res)
 
 }
 
