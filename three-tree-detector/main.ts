@@ -28,11 +28,11 @@ async function init() {
 
     const height = 3000
 
-    let detections = await getTrees(image, boundingBox, width, height)
+    let detections = await getTrees(image, boundingBox, width, height, Graphics)
 
 }
 
-async function getTrees(image, boundingBox, width, height) {
+async function getTrees(image, boundingBox, width, height, Graphics: graphics) {
 
     const detections = await createDetectionsViaOnnx(image, boundingBox, width, height, 0.02)
 
@@ -54,14 +54,20 @@ async function getTrees(image, boundingBox, width, height) {
 
     console.log(remainingDetections)
 
-    const canvas = drawDetections(
-        image,
-        remainingDetections.filter(e => e != undefined),
-        640,
-        640
-    );
+    if (Graphics) {
 
-    document.body.appendChild(canvas);
+        const canvas = drawDetections(
+            image,
+            remainingDetections.filter(e => e != undefined),
+            640,
+            640
+        );
+
+        document.body.appendChild(canvas);
+
+    }
+
+
 
     return remainingDetections
 
