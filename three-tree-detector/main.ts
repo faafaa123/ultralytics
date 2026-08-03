@@ -67,10 +67,12 @@ async function getTrees(image, boundingBox, width, height, Graphics: graphics) {
 
     }
 
-
-
     return remainingDetections
 
+}
+
+function getMiddle(a, b) {
+    return (a + b) / 2;
 }
 
 async function createDetectionsViaOnnx(
@@ -128,6 +130,8 @@ interface Detection {
     mercatorWidth: number;
     mercatorHeight: number;
     mercatorPolygon: [number, number][];
+
+    treeHeight: number;
 
     classId: number;
     className: string;
@@ -359,6 +363,8 @@ function decodeYOLO(
             mercatorWidth,
             mercatorHeight,
             mercatorPolygon,
+
+            treeHeight: getMiddle(mercatorWidth, mercatorHeight),
 
             classId: bestClassId,
             className: classNames[bestClassId],
