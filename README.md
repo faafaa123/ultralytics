@@ -9,7 +9,7 @@
   <h3 align="center"><a href="https://roboflow.com/">Roboflow.com</a> Computer Vision</h3>
 
   <p align="center">
-    ein Repository zum trainieren und testen von AI-Modellen<br>
+    mein Repository zum Trainieren und Testen von AI-Modellen<br>
     ~ die bekannten YOLO-Modelle
     <br />
     <br />
