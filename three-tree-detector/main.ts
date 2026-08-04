@@ -23,10 +23,10 @@ async function init() {
     Graphics.main()
 
     const boundingBox = [
-        9.124732, 
-        51.432518,
-        9.130832,
-        51.435724,
+        9.115831,
+        51.408452,
+        9.118033,
+        51.409613, 
     ]
 
     const width = 1024
@@ -43,7 +43,7 @@ async function init() {
 
 }
 
-async function getImage(boundingBox: string): Promise<ImageData> {
+async function getImage(boundingBox: string): Promise<HTMLImageElement> {
     const cachedImageKey = "wms-image-cache";
     const cachedBoundingBoxKey = "wms-image-bbox";
 
@@ -63,7 +63,7 @@ async function getImage(boundingBox: string): Promise<ImageData> {
         REQUEST: "GetMap",
 
         // Layer aus GetCapabilities
-        LAYERS: "he_dop_cir",
+        LAYERS: "he_dop_rgb",
 
         // Koordinatensystem
         CRS: "EPSG:3857",
@@ -103,31 +103,18 @@ async function getImage(boundingBox: string): Promise<ImageData> {
     }
 }
 
-function loadImageFromUrl(imageUrl: string): Promise<ImageData> {
+function loadImageFromUrl(imageUrl: string): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
         const img = new Image();
 
-        img.onload = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = img.naturalWidth;
-            canvas.height = img.naturalHeight;
-
-            const context = canvas.getContext('2d');
-            if (!context) {
-                reject(new Error('Failed to create canvas context.'));
-                return;
-            }
-
-            context.drawImage(img, 0, 0);
-            resolve(context.getImageData(0, 0, canvas.width, canvas.height));
-        };
+        img.onload = () => resolve(img);
         img.onerror = () => reject(new Error("Failed to load image."));
 
         img.src = imageUrl;
     });
 }
 
-function loadImageFromDataUrl(dataUrl: string): Promise<ImageData> {
+function loadImageFromDataUrl(dataUrl: string): Promise<HTMLImageElement> {
     return loadImageFromUrl(dataUrl);
 }
 

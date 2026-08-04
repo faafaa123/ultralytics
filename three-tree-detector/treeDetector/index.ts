@@ -4,7 +4,13 @@ import { graphics } from '../classes/graphics';
 import { segmentize } from '../segmentize';
 ort.env.wasm.wasmPaths = "/node_modules/onnxruntime-web/dist/";
 
-export async function getTrees(image, boundingBox, width, height, Graphics: graphics) {
+export async function getTrees(
+    image: HTMLImageElement,
+    boundingBox: number[],
+    width: number,
+    height: number,
+    Graphics: graphics
+) {
 
     const detections = await createDetectionsViaOnnx(image, boundingBox, width, height, 0.02)
 
