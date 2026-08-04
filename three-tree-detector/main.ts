@@ -39,7 +39,7 @@ async function init() {
 
     const image = await getImage(`${min[0]}, ${min[1]}, ${max[0]}, ${max[1]}`)
 
-    let detections = await getTrees(image, boundingBox, width, height, Graphics)
+    let detections = await getTrees(image, [min[0], min[1], max[0], max[1]], width, height, Graphics)
 
 }
 
