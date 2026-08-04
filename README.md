@@ -25,10 +25,10 @@
 
 ## Ordnerstruktur
 
-### ./facade-detector ~ Erkennung von Fenster und Türen ( old )
+### ./facade-detector ~ Erkennung von Fenster und Türen aus der Frontalperspektive ( old )
 Source: <a href="https://universe.roboflow.com/facade-elements/facade-elements-for-yolov8">facade-elements-for-yolov8 Computer Vision Model</a><br><br>
 
-### ./tree-detector ~ Erkennung von Bäumen ( bitte dieses hier trainieren )
+### ./tree-detector ~ Erkennung von Bäumen aus der Vogelperspektive ( bitte dieses hier trainieren, siehe TODO weiter unten )
 Source: <a href="https://universe.roboflow.com/detectiontest-1pfas/tree-3prlq">tree Computer Vision Dataset</a><br><br>
 
 ### ./web-testing ~ Ausführen der web-kompatiblen Konvertierungen der trainierten Modelle ( onnxruntime-web )
@@ -37,4 +37,4 @@ Source: <a href="https://universe.roboflow.com/detectiontest-1pfas/tree-3prlq">t
 
 <br>
 
-As you can see the positions of the trees selected by the ai-model does already fit well. But we have to take a detection with confidence lower than 4%, which isn't really right.<br><br>
+Wie du siehst passen die vom KI-Modell ausgewählten Baumpositionen bereits gut. Allerdings stammen sie aus einem schwach trainierten Modell und somit müssen wir mit einer Konfidenz von unter 4% arbeiten, was nicht wirklich gut ist.<br>
