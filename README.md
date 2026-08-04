@@ -26,13 +26,15 @@
 ## Ordnerstruktur
 
 ### ./facade-detector ~ Erkennung von Fenster und Türen ( old )
+Source: <a href="https://universe.roboflow.com/facade-elements/facade-elements-for-yolov8">facade-elements-for-yolov8 Computer Vision Model</a><br><br>
 
-### ./tree-detector ~ Erkennung von Bäumen
+### ./tree-detector ~ Erkennung von Bäumen ( bitte dieses hier trainieren )
+Source: <a href="https://universe.roboflow.com/detectiontest-1pfas/tree-3prlq">tree Computer Vision Dataset</a><br><br>
 
 ### ./web-testing ~ Ausführen der web-kompatiblen Konvertierungen der trainierten Modelle ( onnxruntime-web )
 
 <!-- <div align="center"> <a href="https://github.com/faafaa123/Skimpex-App"> <img src="./demo-tree-detector.JPG" alt="Logo" > </a> </div> -->
 
 <br>
-Source: <a href="https://universe.roboflow.com/detectiontest-1pfas/tree-3prlq">tree Computer Vision Dataset</a><br><br>
+
 As you can see the positions of the trees selected by the ai-model does already fit well. But we have to take a detection with confidence lower than 4%, which isn't really right.<br><br>
