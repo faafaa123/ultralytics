@@ -37,18 +37,39 @@ async function init() {
 
     let max = convertCoords(boundingBox[2], boundingBox[3])
 
-    const image = await getImage(`${min[0]}, ${min[1]}, ${max[0]}, ${max[1]}`)
+    const image = await getImage(`${min[0]}, ${min[1]}, ${max[0]}, ${max[1]}`, width, height, 'he_dop_rgb')
 
     let detections = await getTrees(image, [min[0], min[1], max[0], max[1]], width, height, Graphics)
 
 }
 
-async function getImage(boundingBox: string): Promise<HTMLImageElement> {
-    const cachedImageKey = "wms-image-cache";
-    const cachedBoundingBoxKey = "wms-image-bbox";
+async function getImage(boundingBox: string, width: number, height: number, layers: 'he_dop_rgb' | 'he_dop_cir'): Promise<HTMLImageElement> {
 
-    const cachedImage = localStorage.getItem(cachedImageKey);
-    const cachedBoundingBox = localStorage.getItem(cachedBoundingBoxKey);
+    let cachedImageKey
+    let cachedBoundingBoxKey
+
+    let cachedImage
+    let cachedBoundingBox
+
+    if (layers === 'he_dop_rgb') {
+
+        cachedImageKey = "wms-image-cache-rgb";
+        cachedBoundingBoxKey = "wms-image-bbox-rgb";
+
+        cachedImage = localStorage.getItem(cachedImageKey);
+        cachedBoundingBox = localStorage.getItem(cachedBoundingBoxKey);
+
+    }
+
+    else if (layers === 'he_dop_cir') {
+
+        cachedImageKey = "wms-image-cache-cir";
+        cachedBoundingBoxKey = "wms-image-bbox-cir";
+
+        cachedImage = localStorage.getItem(cachedImageKey);
+        cachedBoundingBox = localStorage.getItem(cachedBoundingBoxKey);
+
+    }
 
     if (cachedImage && cachedBoundingBox === boundingBox) {
         console.log('Load from localstorage')
@@ -63,7 +84,7 @@ async function getImage(boundingBox: string): Promise<HTMLImageElement> {
         REQUEST: "GetMap",
 
         // Layer aus GetCapabilities
-        LAYERS: "he_dop_rgb",
+        LAYERS: layers,
 
         // Koordinatensystem
         CRS: "EPSG:3857",
@@ -71,8 +92,8 @@ async function getImage(boundingBox: string): Promise<HTMLImageElement> {
         // Bounding Box in UTM-Koordinaten
         BBOX: boundingBox,
 
-        WIDTH: 1024,
-        HEIGHT: 1024,
+        WIDTH: width,
+        HEIGHT: height,
 
         FORMAT: "image/png",
         TRANSPARENT: false
