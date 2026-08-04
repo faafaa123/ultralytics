@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@dgreenheck/ez-tree": "^1.1.0",
     "@types/three": "^0.169.0",
     "earcut": "^3.0.1",
     "onnxruntime-web": "^1.27.0",
