@@ -23,7 +23,13 @@
 <br />
 <br />
 
-## Über das Projekt
+## Ordnerstruktur
+
+### ./facade-detector ~ Erkennung von Fenster und Türen ( old )
+
+### ./tree-detector ~ Erkennung von Bäumen
+
+### ./web-testing ~ Ausführen der web-kompatiblen Konvertierungen der trainierten Modelle ( onnxruntime-web )
 
 <!-- <div align="center"> <a href="https://github.com/faafaa123/Skimpex-App"> <img src="./demo-tree-detector.JPG" alt="Logo" > </a> </div> -->
 
