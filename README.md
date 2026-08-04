@@ -38,3 +38,10 @@ Source: <a href="https://universe.roboflow.com/detectiontest-1pfas/tree-3prlq">t
 <br>
 
 Wie du siehst passen die vom KI-Modell ausgewählten Baumpositionen bereits gut. Allerdings stammen sie aus einem schwach trainierten Modell und somit müssen wir mit einer Konfidenz von unter 4% arbeiten, was nicht wirklich gut ist.<br>
+
+Ich habe dir eine für deinen MSI-EdgeXpert vorkonfigurierte Trainingsdatei in den ./tree-detector Ordner gelegt ( train-edgeX.py ).
+Du kannst sie gerne optimieren.
+
+<br>
+
+Nach einen erfolgreichen Training bitte einfach auf das Repository pushen. Vielen Dank :D
