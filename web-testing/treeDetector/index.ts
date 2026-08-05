@@ -20,7 +20,7 @@ export async function getTrees(
 
     let polygons = detections.map(e => [e.mercatorPolygon])
 
-    let groups = segmentize(Graphics, polygons)
+    let groups = segmentize(Graphics, polygons, true)
 
     let remainingIndices = findRemainingPolygons(groups, groups.length)
 

@@ -5,11 +5,11 @@ import polygonClipping from 'polygon-clipping';
 export interface intersection { indexI: number, indexJ: number }
 interface featureGroup { indexes: number[], features: any[] }
 
-export function segmentize(Graphics: graphics, intersectingPolygons: any[]) {
+export function segmentize(Graphics: graphics, intersectingPolygons: any[], intersectionsOnly?: boolean) {
 
     let intersections: intersection[] = findIntersections(intersectingPolygons)
 
-    return intersections
+    if (intersectionsOnly) return intersections
 
     let groups = group(intersections, intersectingPolygons.length)
 
