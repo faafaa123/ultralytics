@@ -1,6 +1,10 @@
 import axios from "axios";
+import proj4 from "proj4";
+// Define projection (WGS84 -> Web Mercator)
+// proj4.defs("WGS84", "+proj=longlat +datum=WGS84 +no_defs");
+proj4.defs("Mercator", "+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs");
 
-export async function getImage(boundingBox: string, width: number, height: number, layers: 'he_dop_rgb' | 'he_dop_cir'): Promise<HTMLImageElement> {
+export async function getImage(boundingBox: number[], width: number, height: number, layers: 'he_dop_rgb' | 'he_dop_cir'): Promise<HTMLImageElement> {
 
     let cachedImageKey
     let cachedBoundingBoxKey
@@ -28,7 +32,7 @@ export async function getImage(boundingBox: string, width: number, height: numbe
 
     }
 
-    if (cachedImage && cachedBoundingBox === boundingBox) {
+    if (cachedImage && cachedBoundingBox === `${boundingBox[0]},${boundingBox[1]},${boundingBox[2]},${boundingBox[3]}`) {
 
         console.log('Load from localstorage')
 
@@ -36,8 +40,16 @@ export async function getImage(boundingBox: string, width: number, height: numbe
 
     }
 
+    const min = proj4("Mercator", "EPSG:3857", [boundingBox[0], boundingBox[1]]);
+    
+    const max = proj4("Mercator", "EPSG:3857", [boundingBox[2], boundingBox[3]]);
+
     const url = "https://www.gds-srv.hessen.de/cgi-bin/lika-services/ogc-free-images.ows";
 
+    let boundingBoxMercator = [...min, ...max]
+
+    console.log(boundingBoxMercator)
+    
     const params = {
         SERVICE: "WMS",
         VERSION: "1.3.0",
@@ -50,7 +62,7 @@ export async function getImage(boundingBox: string, width: number, height: numbe
         CRS: "EPSG:3857",
 
         // Bounding Box in UTM-Koordinaten
-        BBOX: boundingBox,
+        BBOX: `${boundingBoxMercator[0]}, ${boundingBoxMercator[1]}, ${boundingBoxMercator[2]}, ${boundingBoxMercator[3]}`,
 
         WIDTH: width,
         HEIGHT: height,
