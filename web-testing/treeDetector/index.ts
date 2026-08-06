@@ -9,7 +9,7 @@ export async function getTrees(
     boundingBox: number[],
     width: number,
     height: number,
-    Graphics: graphics
+    Graphics?: graphics
 ) {
 
     const detections = await createDetectionsViaOnnx(image, boundingBox, width, height, 0.02)
@@ -20,7 +20,7 @@ export async function getTrees(
 
     let polygons = detections.map(e => [e.mercatorPolygon])
 
-    let groups = segmentize(Graphics, polygons, true)
+    let groups = segmentize(polygons, true)
 
     let remainingIndices = findRemainingPolygons(groups, groups.length)
 
