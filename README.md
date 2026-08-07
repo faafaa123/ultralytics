@@ -40,8 +40,7 @@ Source: <a href="https://universe.roboflow.com/detectiontest-1pfas/tree-3prlq">t
 ### Wie du siehst passen die vom KI-Modell ausgewählten Baumpositionen bereits gut. Allerdings stammen sie aus einem schwach trainierten Modell und somit müssen wir mit einer Konfidenz von 2% arbeiten, was nicht wirklich gut ist.<br>
 
 <div align="center"> <a href="https://github.com/faafaa123/ultralytics"> <img src="demo-notes.png" alt="Logo" > </a> <br>
- ·
-      <a href="https://github.com/faafaa123/ultralytics/issues">See more</a>
+
 </div>
 
 <br>
